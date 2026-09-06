@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FENSC | Secure Checkout</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@200;400;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        body {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            background: #050505;
+            flex-direction: column;
+            overflow: hidden;
+            margin: 0;
+        }
+
+        .checkout-blur {
+            position: absolute;
+            width: 800px;
+            height: 800px;
+            background: radial-gradient(circle, var(--accent) 0%, transparent 60%);
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            filter: blur(150px);
+            opacity: 0.15;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        .checkout-container {
+            position: relative;
+            z-index: 1;
+            max-width: 420px;
+            width: 90%;
+            background: rgba(15, 15, 15, 0.6);
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            padding: 2rem 1.5rem;
+            text-align: center;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+            animation: floatUp 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        @keyframes floatUp {
+            0% {
+                transform: translateY(40px);
+                opacity: 0;
+            }
+
+            100% {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .checkout-header h2 {
+            font-size: 1.4rem;
+            margin-top: 0;
+            margin-bottom: 0.2rem;
+            background: linear-gradient(to right, #fff, var(--text-muted));
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .checkout-header p {
+            color: var(--text-muted);
+            font-size: 0.75rem;
+            margin-bottom: 0.8rem;
+        }
+
+        .checkout-amount {
+            font-size: 1.4rem;
+            font-weight: 800;
+            color: var(--accent);
+            margin-bottom: 0.8rem;
+        }
+
+        .scanner-wrap {
+            position: relative;
+            display: inline-block;
+            margin-bottom: 1.5rem;
+            border-radius: 15px;
+            padding: 6px;
+            background: #fff;
+            box-shadow: 0 0 30px rgba(255, 51, 102, 0.4);
+            animation: pulse-glow 2s infinite ease-in-out;
+        }
+
+        @keyframes pulse-glow {
+            0% {
+                box-shadow: 0 0 20px rgba(255, 51, 102, 0.3);
+            }
+
+            50% {
+                box-shadow: 0 0 40px rgba(255, 51, 102, 0.7);
+            }
+
+            100% {
+                box-shadow: 0 0 20px rgba(255, 51, 102, 0.3);
+            }
+        }
+
+        .scanner-wrap img {
+            width: 220px;
+            height: auto;
+            border-radius: 10px;
+            display: block;
+        }
+
+        .payment-instructions {
+            color: var(--text-muted);
+            font-size: 0.8rem;
+            margin-bottom: 1.5rem;
+            line-height: 1.6;
+        }
+
+        .btn-back {
+            display: inline-block;
+            padding: 0.6rem 1.5rem;
+            border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            background: rgba(0, 0, 0, 0.4);
+            color: #fff;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            font-weight: 500;
+            font-size: 0.85rem;
+        }
+
+        .btn-back:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .upload-section {
+            margin-bottom: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+        }
+
+        .upload-label {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            width: 100%;
+            padding: 0.8rem;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px dashed rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            color: var(--text-muted);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.85rem;
+        }
+
+        .upload-label:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: var(--accent);
+            color: #fff;
+        }
+
+        .btn-checkout {
+            width: 100%;
+            padding: 0.8rem;
+            border-radius: 8px;
+            border: none;
+            background: linear-gradient(135deg, var(--secondary), var(--accent));
+            color: #fff;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            margin-top: 1rem;
+        }
+
+        .btn-checkout:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(255, 51, 102, 0.3);
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="checkout-blur"></div>
+
+    <div class="checkout-container">
+        <div class="checkout-header">
+            <h2>Secure Payment</h2>
+            <p>Scan the QR code strictly below to complete your order.</p>
+        </div>
+
+        <div class="checkout-amount" id="total-display">
+            Calculating...
+        </div>
+
+        <div class="scanner-wrap">
+            <img src="scanner.jpeg" alt="Payment QR Code Scanner">
+        </div>
+
+        <p class="payment-instructions">
+            Open any UPI payment app (GPay, PhonePe, Paytm, BHIM) and scan this QR code to initiate the transfer.
+        </p>
+
+        <div class="upload-section">
+            <button id="final-submit-btn" class="btn-checkout">Confirm & Send </button>
+        </div>
+
+        <a href="index.html" class="btn-back">← Back to Store</a>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const rawData = localStorage.getItem('fensc_cart');
+            const totalDisplay = document.getElementById('total-display');
+            let globalCartItems = [];
+            let globalTotal = 0;
+
+            if (rawData) {
+                try {
+                    globalCartItems = JSON.parse(rawData);
+                    globalCartItems.forEach(item => {
+                        globalTotal += item.price;
+                    });
+
+                    if (globalTotal > 0) {
+                        totalDisplay.innerHTML = 'Total Due: <br>₹' + globalTotal;
+                    } else {
+                        totalDisplay.textContent = 'Cart Empty';
+                    }
+                } catch (e) {
+                    totalDisplay.textContent = 'Error parsing total';
+                }
+            } else {
+                totalDisplay.textContent = 'No active session';
+            }
+
+            // Handle submission click
+            const submitBtn = document.getElementById('final-submit-btn');
+            submitBtn.addEventListener('click', () => {
+
+                if (globalCartItems.length === 0) {
+                    alert('Your cart is empty. Please return to the store.');
+                    return;
+                }
+
+                // Format WhatsApp output message strictly with Items
+                let text = "Hi FΞNSC, I have successfully made the payment!\n\n*My Order:*\n";
+                globalCartItems.forEach((item, index) => {
+                    text += `${index + 1}. ${item.name} (₹${item.price})\n`;
+                });
+                text += `\n*Total Paid:* ₹${globalTotal}\n\n`;
+
+                // Redirect to WhatsApp seamlessly
+                window.open('https://api.whatsapp.com/send?phone=919343479676&text=' + encodeURIComponent(text), '_blank');
+
+                // Clear the active local cart
+                localStorage.removeItem('fensc_cart');
+
+                // Route user back
+                setTimeout(() => {
+                    window.location.href = 'index.html';
+                }, 1000);
+            });
+        });
+    </script>
+</body>
+
+</html>
